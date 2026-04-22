@@ -24,24 +24,9 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - ENVIRONMENT=development
-    depends_on:
-      - database
     volumes:
       - ./backend:/app
-    networks:
-      - squadsync-network
-
-  database:
-    image: postgres:16-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - squadsync-db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      - squadsync-db:/app/data
     networks:
       - squadsync-network
 

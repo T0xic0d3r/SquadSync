@@ -1,24 +1,22 @@
 # SquadSync — Stack Decision
 
-## Status: MOSTLY DECIDED
+## Status: DECIDED ✅
 
-## Decided
-| Layer    | Technology      | Status    |
-|----------|-----------------|-----------|
-| Frontend | React           | ✅ Locked  |
-| Backend  | Python (FastAPI)| ✅ Locked  |
-| Database | TBD             | ⏳ Pending |
-| Auth     | JWT             | ✅ Locked  |
+## Final Stack
+| Layer    | Technology      | Status   |
+|----------|-----------------|----------|
+| Frontend | React           | ✅ Locked |
+| Backend  | Python (FastAPI)| ✅ Locked |
+| Database | SQLite          | ✅ Locked |
+| Auth     | JWT             | ✅ Locked |
 
-## Database Options
-| Option     | Type | Best For                    |
-|------------|------|-----------------------------|
-| PostgreSQL | SQL  | Complex queries, relations  |
-| MySQL      | SQL  | Simple, widely known        |
-| MongoDB    | NoSQL| Flexible/unstructured data  |
+## Notes
+- SQLite is used for simplicity in development
+- Can be migrated to PostgreSQL for production later
+- Database file stored at `backend/data/squadsync.db`
+- Never commit the `.db` file
 
-## Decision Checklist
-- [x] Frontend → React
-- [x] Backend → Python (FastAPI)
-- [ ] Database
-- [x] Auth → JWT
+## API Docs
+When running locally:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
