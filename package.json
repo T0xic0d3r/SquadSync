@@ -1,0 +1,12 @@
+{
+  "name": "squadsync",
+  "version": "1.0.0",
+  "description": "Team collaboration and squad management app",
+  "scripts": {
+    "frontend": "cd frontend && npm start",
+    "backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "author": "T0xic0d3r",
+  "license": "MIT"
+}
