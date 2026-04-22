@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    networks:
+      - squadsync-network
+
+  backend:
+    # Uncomment and configure when stack is decided
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    image: node:20-alpine
+    working_dir: /app
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - squadsync-network
+
+  database:
+    # Switch image to mysql or mongo if needed
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - squadsync-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - squadsync-network
+
+networks:
+  squadsync-network:
+    driver: bridge
+
+volumes:
+  squadsync-db:
