@@ -8,30 +8,30 @@ services:
     ports:
       - "3000:80"
     environment:
-      - REACT_APP_API_URL=http://localhost:5000
+      - REACT_APP_API_URL=http://localhost:8000
     depends_on:
       - backend
     networks:
       - squadsync-network
 
   backend:
-    # Uncomment and configure when stack is decided
-    # build:
-    #   context: ./backend
-    #   dockerfile: Dockerfile
-    image: node:20-alpine
-    working_dir: /app
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "8000:8000"
     environment:
-      - NODE_ENV=development
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - ENVIRONMENT=development
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/app
     networks:
       - squadsync-network
 
   database:
-    # Switch image to mysql or mongo if needed
     image: postgres:16-alpine
     restart: always
     environment:
