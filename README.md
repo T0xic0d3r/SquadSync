@@ -1,20 +1,12 @@
-# 🛡️ SquadSync
+# SquadSync
 
-A web-based team accountability platform where tasks aren't just marked done — they're **proven** done.
+> Team collaboration and squad management app.
 
-## 🧠 What it does
-Teams create and assign tasks, members submit proof of completion (image, file, or link), and teammates approve or reject submissions. Progress is tracked on a shared dashboard.
+## Branches
+- `main` — production only
+- `develop` — active development, all PRs target here
 
-## ⚙️ Tech Stack
-- ⚛️ **Frontend** — React (Vercel)
-- 🟢 **Backend** — Node.js + Express (Render)
-- 🐘 **Database** — PostgreSQL (Supabase)
-- 🔐 **Auth** — JWT
-
-## ✨ Core Features
-- 👥 Team creation and role management (Admin / Member)
-- 📋 Task assignment with deadlines and priority levels
-- 📎 Proof-based submission system
-- ✅❌ Approval / rejection workflow with feedback
-- 📊 Dashboard for task and team progress tracking
-- 🔔 Notifications for assignments, approvals, and deadlines
+## Contributing
+1. Branch off `develop`
+2. Name your branch `feature/your-feature`
+3. Open a PR → develop
