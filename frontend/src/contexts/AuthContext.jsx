@@ -9,44 +9,34 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    const savedUser = localStorage.getItem('user');
+    if (token && savedUser) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      fetchUser();
-    } else {
-      setLoading(false);
+      setUser(JSON.parse(savedUser));
     }
+    setLoading(false);
   }, []);
 
-  const fetchUser = async () => {
-    try {
-      const response = await api.get('/auth/me');
-      setUser(response.data);
-    } catch (error) {
-      localStorage.removeItem('token');
-      delete api.defaults.headers.common['Authorization'];
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    const { user, token } = response.data;
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(user);
+  const login = async (username, password) => {
+    const res = await api.post('/token/', { username, password });
+    const { access, refresh } = res.data;
+    localStorage.setItem('token', access);
+    localStorage.setItem('refresh', refresh);
+    api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+    const meRes = await api.get('/me/');
+    localStorage.setItem('user', JSON.stringify(meRes.data));
+    setUser(meRes.data);
   };
 
   const register = async (data) => {
-    const response = await api.post('/auth/register', data);
-    const { user, token } = response.data;
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(user);
+    await api.post('/register/', data);
+    await login(data.username, data.password);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh');
+    localStorage.removeItem('user');
     delete api.defaults.headers.common['Authorization'];
     setUser(null);
   };

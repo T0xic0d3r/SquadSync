@@ -22,7 +22,7 @@ function TaskDetails() {
   const fetchTask = async () => {
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch(`http://localhost:8000/api/tasks/${id}`, {
+      const res = await fetch(`/api/tasks/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await res.json()
@@ -37,7 +37,7 @@ function TaskDetails() {
   const fetchComments = async () => {
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch(`http://localhost:8000/api/tasks/${id}/comments`, {
+      const res = await fetch(`/api/tasks/${id}/comments`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await res.json()
@@ -61,7 +61,7 @@ function TaskDetails() {
     }
 
     try {
-      const res = await fetch(`http://localhost:8000/api/tasks/${id}/proof`, {
+      const res = await fetch(`/api/tasks/${id}/proof`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -80,7 +80,7 @@ function TaskDetails() {
   const handleApprove = async (approved, reason = '') => {
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch(`http://localhost:8000/api/tasks/${id}/approve`, {
+      const res = await fetch(`/api/tasks/${id}/approve`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ function TaskDetails() {
     
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch(`http://localhost:8000/api/tasks/${id}/comments`, {
+      const res = await fetch(`/api/tasks/${id}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

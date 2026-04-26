@@ -6,7 +6,7 @@ function Leaderboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    fetch(`http://localhost:8000/api/leaderboard?sort=${sortBy}`, {
+    fetch(`/api/leaderboard?sort=${sortBy}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())

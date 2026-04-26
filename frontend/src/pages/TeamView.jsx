@@ -13,13 +13,13 @@ function TeamView() {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     if (!user.teamId) return
     
-    const res = await fetch(`http://localhost:8000/api/teams/${user.teamId}/members`, {
+    const res = await fetch(`/api/teams/${user.teamId}/members`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const data = await res.json()
     setMembers(data)
     
-    const teamRes = await fetch(`http://localhost:8000/api/teams/my`, {
+    const teamRes = await fetch(`/api/teams/my`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const teamData = await teamRes.json()

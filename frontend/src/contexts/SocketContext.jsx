@@ -1,34 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import React, { createContext, useContext } from 'react';
 
-const SocketContext = createContext(undefined);
+const SocketContext = createContext({ socket: null });
 
-export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
+export const SocketProvider = ({ children }) => (
+  <SocketContext.Provider value={{ socket: null }}>
+    {children}
+  </SocketContext.Provider>
+);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const newSocket = io(import.meta.env.VITE_WS_URL || 'ws://localhost:8000', {
-        auth: { token }
-      });
-      setSocket(newSocket);
-      
-      return () => {
-        newSocket.close();
-      };
-    }
-  }, []);
-
-  return (
-    <SocketContext.Provider value={{ socket }}>
-      {children}
-    </SocketContext.Provider>
-  );
-};
-
-export const useSocket = () => {
-  const context = useContext(SocketContext);
-  if (!context) throw new Error('useSocket must be used within SocketProvider');
-  return context;
-};
+export const useSocket = () => useContext(SocketContext);
