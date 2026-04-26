@@ -5,10 +5,11 @@ from .models import Account, Log
 
 class UserSerializer(serializers.ModelSerializer):
     teamId = serializers.SerializerMethodField()
+    teamName = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'teamId']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'teamId', 'teamName']
 
     def validate_username(self, value):
         if len(value) < 3:
@@ -17,8 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_teamId(self, obj):
         try:
-            membership = obj.team_memberships.select_related('team').first()
-            return membership.team.id if membership else None
+            return obj.team_memberships.team.id
+        except Exception:
+            return None
+
+    def get_teamName(self, obj):
+        try:
+            return obj.team_memberships.team.name
         except Exception:
             return None
 

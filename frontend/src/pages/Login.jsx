@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 
 function Login() {
   const [username, setUsername] = useState('')
@@ -8,35 +7,73 @@ function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { login } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
     try {
-      await login(username, password)
+      // Step 1: get tokens
+      const tokenRes = await fetch('/api/token/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      const tokenData = await tokenRes.json()
+      if (!tokenRes.ok) {
+        setError(tokenData.detail || 'Invalid username or password')
+        return
+      }
+      localStorage.setItem('token', tokenData.access)
+      localStorage.setItem('refresh', tokenData.refresh)
+
+      // Step 2: get full user info including teamId
+      const userRes = await fetch('/api/me/', {
+        headers: { 'Authorization': `Bearer ${tokenData.access}` }
+      })
+      const user = await userRes.json()
+      localStorage.setItem('user', JSON.stringify(user))
       navigate('/dashboard')
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Check your credentials.')
+      setError('Cannot connect to server')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '30px', backgroundColor: 'white', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+    <div style={{ maxWidth: '400px', margin: '80px auto', padding: '30px', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
       <h1 style={{ textAlign: 'center', color: '#667eea', marginBottom: '5px' }}>SquadSync</h1>
-      <h2 style={{ textAlign: 'center', fontSize: '18px', marginBottom: '20px', color: '#555' }}>Welcome back</h2>
-      {error && <div style={{ padding: '10px', backgroundColor: '#f8d7da', borderRadius: '5px', marginBottom: '15px', color: '#721c24' }}>{error}</div>}
+      <p style={{ textAlign: 'center', color: '#888', marginBottom: '25px' }}>Sign in to your account</p>
+      {error && <div style={{ padding: '12px', backgroundColor: '#f8d7da', borderRadius: '8px', marginBottom: '15px', color: '#721c24', fontSize: '14px' }}>{error}</div>}
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} style={{ width: '100%', padding: '12px', margin: '8px 0', borderRadius: '5px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '14px' }} required />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} style={{ width: '100%', padding: '12px', margin: '8px 0', borderRadius: '5px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '14px' }} required />
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: loading ? '#aaa' : '#667eea', color: 'white', border: 'none', borderRadius: '5px', fontSize: '16px', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '10px' }}>
-          {loading ? 'Logging in...' : 'Login'}
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          style={{ width: '100%', padding: '12px', margin: '8px 0', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '15px' }}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          style={{ width: '100%', padding: '12px', margin: '8px 0', borderRadius: '8px', border: '1px solid #ddd', boxSizing: 'border-box', fontSize: '15px' }}
+          required
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ width: '100%', padding: '13px', marginTop: '10px', backgroundColor: loading ? '#aaa' : '#667eea', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', cursor: loading ? 'not-allowed' : 'pointer' }}
+        >
+          {loading ? 'Signing in...' : 'Login'}
         </button>
       </form>
-      <p style={{ textAlign: 'center', marginTop: '20px', color: '#555' }}>No account? <Link to="/register" style={{ color: '#667eea' }}>Register</Link></p>
+      <p style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
+        No account? <Link to="/register" style={{ color: '#667eea' }}>Register</Link>
+      </p>
     </div>
   )
 }

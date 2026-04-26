@@ -22,15 +22,12 @@ class Team(models.Model):
 class TeamMember(models.Model):
     ROLE_CHOICES = [('ADMIN', 'Admin'), ('MEMBER', 'Member')]
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='members')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_memberships')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='team_memberships')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='MEMBER')
     score = models.IntegerField(default=0)
     streak = models.IntegerField(default=0)
     reliability_score = models.FloatField(default=100.0)
     joined_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('team', 'user')
 
     def __str__(self):
         return f"{self.user.username} in {self.team.name}"
