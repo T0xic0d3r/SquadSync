@@ -1,25 +1,13 @@
-# Dependencies
-node_modules/
-
-# Environment
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+db.sqlite3
+staticfiles/
+media/
+*.log
 .env
 .env.local
-.env.production
-
-# Build output
-dist/
-build/
-
-# OS
+frontend/node_modules/
+frontend/dist/
 .DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-
-# Logs
-*.log
-npm-debug.log*
-*.db
-backend/data/

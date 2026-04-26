@@ -1,0 +1,27 @@
+name: CD — Deploy to Render
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy Backend → Render
+        run: |
+          curl -s --fail -X POST "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
+          echo "✅ Backend deploy triggered"
+
+      - name: Deploy Frontend → Render
+        run: |
+          curl -s --fail -X POST "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}"
+          echo "✅ Frontend deploy triggered"
+
+      - name: Summary
+        run: |
+          echo "## 🚀 Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
