@@ -1,49 +1,23 @@
-﻿import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
 
-function TaskCard({ task }) {
-  const navigate = useNavigate()
+const priorityColor = { LOW: '#28a745', MEDIUM: '#ffc107', HIGH: '#dc3545' }
+const statusColor = { TODO: '#6c757d', IN_PROGRESS: '#0d6efd', DONE: '#28a745' }
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'APPROVED': return '#28a745'
-      case 'REJECTED': return '#dc3545'
-      case 'SUBMITTED': return '#ffc107'
-      default: return '#6c757d'
-    }
-  }
-
-  const getPriorityColor = (priority) => {
-    switch(priority) {
-      case 'URGENT': return '#dc3545'
-      case 'HIGH': return '#fd7e14'
-      case 'MEDIUM': return '#ffc107'
-      default: return '#28a745'
-    }
-  }
-
+function TaskCard({ task, onClick, onStatusChange }) {
   return (
-    <div onClick={() => navigate(`/task/${task.id}`)} style={{
-      border: '1px solid #ddd',
-      borderRadius: '10px',
-      padding: '15px',
-      marginBottom: '10px',
-      cursor: 'pointer',
-      backgroundColor: 'white'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h4 style={{ margin: 0 }}>{task.title}</h4>
-        <div>
-          <span style={{ backgroundColor: getPriorityColor(task.priority), color: 'white', padding: '3px 8px', borderRadius: '5px', fontSize: '12px', marginRight: '5px' }}>
-            {task.priority}
-          </span>
-          <span style={{ backgroundColor: getStatusColor(task.status), color: 'white', padding: '3px 8px', borderRadius: '5px', fontSize: '12px' }}>
-            {task.status}
-          </span>
-        </div>
+    <div onClick={onClick} style={{ padding: '15px 20px', borderRadius: '8px', border: '1px solid #dee2e6', marginBottom: '10px', cursor: onClick ? 'pointer' : 'default', backgroundColor: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'box-shadow 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
+      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'}
+      onMouseLeave={e => e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'}
+    >
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>{task.title}</div>
+        {task.description && <div style={{ color: '#666', fontSize: '13px', marginBottom: '6px' }}>{task.description.slice(0, 80)}{task.description.length > 80 ? '...' : ''}</div>}
+        {task.deadline && <div style={{ fontSize: '12px', color: '#999' }}>📅 {new Date(task.deadline).toLocaleDateString()}</div>}
       </div>
-      <p style={{ color: '#666', fontSize: '14px', marginTop: '10px' }}>{task.description?.substring(0, 100)}</p>
-      <p style={{ color: '#999', fontSize: '12px', marginTop: '10px' }}>Due: {new Date(task.deadline).toLocaleDateString()}</p>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginLeft: '15px' }}>
+        <span style={{ padding: '3px 10px', borderRadius: '10px', fontSize: '12px', backgroundColor: priorityColor[task.priority] || '#6c757d', color: 'white' }}>{task.priority}</span>
+        <span style={{ padding: '3px 10px', borderRadius: '10px', fontSize: '12px', backgroundColor: statusColor[task.status] || '#6c757d', color: 'white' }}>{task.status?.replace('_', ' ')}</span>
+      </div>
     </div>
   )
 }

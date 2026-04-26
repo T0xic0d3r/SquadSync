@@ -1,8 +1,0 @@
-Django>=4.2,<5.0
-djangorestframework
-djangorestframework-simplejwt
-django-filter
-python-dotenv
-djangorestframework-simplejwt
-django-cors-headers
-gunicorn

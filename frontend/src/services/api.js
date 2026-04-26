@@ -13,11 +13,26 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+  async (error) => {
+    const original = error.config;
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true;
+      const refresh = localStorage.getItem('refresh');
+      if (refresh) {
+        try {
+          const res = await axios.post('/api/auth/token/refresh/', { refresh });
+          localStorage.setItem('token', res.data.access);
+          api.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`;
+          original.headers['Authorization'] = `Bearer ${res.data.access}`;
+          return api(original);
+        } catch {
+          localStorage.clear();
+          window.location.href = '/login';
+        }
+      } else {
+        localStorage.clear();
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

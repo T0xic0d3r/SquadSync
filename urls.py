@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/health/', health_check, name='health'),
     path('api/auth/', include('accounts.urls')),
     path('api/tasks/', include('tasks.urls')),
+    path('api/teams/', include('teams.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

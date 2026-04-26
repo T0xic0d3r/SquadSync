@@ -18,19 +18,26 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const res = await api.post('/token/', { username, password });
+    const res = await api.post('/auth/login/', { username, password });
     const { access, refresh } = res.data;
     localStorage.setItem('token', access);
     localStorage.setItem('refresh', refresh);
     api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
-    const meRes = await api.get('/me/');
+    const meRes = await api.get('/auth/users/me/');
     localStorage.setItem('user', JSON.stringify(meRes.data));
     setUser(meRes.data);
+    return meRes.data;
   };
 
   const register = async (data) => {
-    await api.post('/register/', data);
-    await login(data.username, data.password);
+    const res = await api.post('/auth/register/', data);
+    const { tokens, ...userData } = res.data;
+    localStorage.setItem('token', tokens.access);
+    localStorage.setItem('refresh', tokens.refresh);
+    api.defaults.headers.common['Authorization'] = `Bearer ${tokens.access}`;
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    return userData;
   };
 
   const logout = () => {
