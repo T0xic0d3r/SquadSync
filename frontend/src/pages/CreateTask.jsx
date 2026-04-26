@@ -24,7 +24,7 @@ function CreateTask() {
     }
     
     try {
-      const res = await fetch(`http://localhost:8080/api/teams/${user.teamId}/members`, {
+      const res = await fetch(`http://localhost:8000/api/teams/${user.teamId}/members`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await res.json()
@@ -46,7 +46,7 @@ function CreateTask() {
     const token = localStorage.getItem('token')
     
     try {
-      const res = await fetch('http://localhost:8080/api/tasks', {
+      const res = await fetch('http://localhost:8000/api/tasks', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json', 

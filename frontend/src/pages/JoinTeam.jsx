@@ -11,7 +11,7 @@ function JoinTeam() {
     const token = localStorage.getItem('token')
     
     try {
-      const res = await fetch('http://localhost:8080/api/teams/join', {
+      const res = await fetch('http://localhost:8000/api/teams/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ inviteCode: inviteCode.toUpperCase() })

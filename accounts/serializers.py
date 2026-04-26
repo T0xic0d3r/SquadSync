@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import Account, Log
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,11 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Username must be at least 3 characters long.")
         return value
 
-    def validate_email(self, value):
-        if "@" not in value:
-            raise serializers.ValidationError("Enter a valid email address.")
-        return value
-
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -26,9 +22,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'password', 'email']
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        return User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email', ''),
             password=validated_data['password']
         )
-        return user
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['id', 'username', 'email', 'role', 'created_at']
+
+
+class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Log
+        fields = ['id', 'account', 'action', 'timestamp']

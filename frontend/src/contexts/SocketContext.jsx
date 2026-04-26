@@ -9,7 +9,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      const newSocket = io(import.meta.env.VITE_WS_URL || 'ws://localhost:8080', {
+      const newSocket = io(import.meta.env.VITE_WS_URL || 'ws://localhost:8000', {
         auth: { token }
       });
       setSocket(newSocket);

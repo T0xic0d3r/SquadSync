@@ -21,7 +21,7 @@ function Dashboard() {
 
   const fetchUser = async () => {
     const token = localStorage.getItem('token')
-    const res = await fetch('http://localhost:8080/api/auth/me', {
+    const res = await fetch('http://localhost:8000/api/auth/me', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const data = await res.json()
@@ -34,7 +34,7 @@ function Dashboard() {
 
   const fetchTeam = async (teamId) => {
     const token = localStorage.getItem('token')
-    const res = await fetch(`http://localhost:8080/api/teams/my`, {
+    const res = await fetch(`http://localhost:8000/api/teams/my`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const data = await res.json()
@@ -43,7 +43,7 @@ function Dashboard() {
 
   const fetchStats = async (teamId) => {
     const token = localStorage.getItem('token')
-    const res = await fetch(`http://localhost:8080/api/teams/${teamId}/stats`, {
+    const res = await fetch(`http://localhost:8000/api/teams/${teamId}/stats`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const data = await res.json()
@@ -52,7 +52,7 @@ function Dashboard() {
 
   const fetchTasks = async () => {
     const token = localStorage.getItem('token')
-    const res = await fetch('http://localhost:8080/api/tasks/my', {
+    const res = await fetch('http://localhost:8000/api/tasks/my', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const data = await res.json()
