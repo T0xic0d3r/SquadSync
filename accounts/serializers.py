@@ -4,14 +4,23 @@ from .models import Account, Log
 
 
 class UserSerializer(serializers.ModelSerializer):
+    teamId = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'teamId']
 
     def validate_username(self, value):
         if len(value) < 3:
             raise serializers.ValidationError("Username must be at least 3 characters long.")
         return value
+
+    def get_teamId(self, obj):
+        try:
+            membership = obj.team_memberships.select_related('team').first()
+            return membership.team.id if membership else None
+        except Exception:
+            return None
 
 
 class RegisterSerializer(serializers.ModelSerializer):
